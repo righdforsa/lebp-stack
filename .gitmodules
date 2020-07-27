@@ -1,0 +1,6 @@
+[submodule "Bedrock"]
+	path = Bedrock
+	url = git@github.com:Expensify/Bedrock.git
+[submodule "Bedrock-PHP"]
+	path = Bedrock-PHP
+	url = git@github.com:Expensify/Bedrock-PHP.git
