@@ -20,7 +20,9 @@ vagrant ssh -c "/vagrant/Bedrock/bedrock -db /vagrant/Bedrock/bedrock.db"
 ```
 
 # todo list:
-get bedrock to compile and run
-add php folder
+~get bedrock to compile and run~
+~add php folder~
 update Vagrantfile to be idempotent/work from scratch
+get bedrock php libs working
+  - work on passing the right config to the constructor
 
