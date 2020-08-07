@@ -14,7 +14,7 @@ cd ../
 
 # Build bedrock
 vagrant up
-vagrant ssh -c "cd /vagrant/Bedrock && make clean && make all"
+vagrant ssh -c "cd /vagrant/Bedrock && make clean && make CC=gcc-9 all"
 vagrant ssh -c "touch /vagrant/Bedrock/bedrock.db && chmod 744 /vagrant/Bedrock/bedrock.db"
 vagrant ssh -c "/vagrant/Bedrock/bedrock -db /vagrant/Bedrock/bedrock.db" 
 ```

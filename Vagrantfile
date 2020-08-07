@@ -18,6 +18,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.ssh.forward_agent = true
+  config.vm.synced_folder "../", "/srv/project/"
 
   config.vm.provision "shell", path: "scripts/env_prep.sh"
   config.vm.provision "shell", path: "scripts/bedrock_dev_prep.sh"
