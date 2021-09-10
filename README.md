@@ -14,9 +14,11 @@ cd ../
 
 # Build bedrock
 vagrant up
-vagrant ssh -c "cd /vagrant/Bedrock && make clean && make CC=gcc-9 all"
-vagrant ssh -c "touch /vagrant/Bedrock/bedrock.db && chmod 744 /vagrant/Bedrock/bedrock.db"
-vagrant ssh -c "/vagrant/Bedrock/bedrock -db /vagrant/Bedrock/bedrock.db" 
+vagrant ssh -c "cd /srv/project/lebp-stack/Bedrock && make clean && make CC=gcc-9 all"
+vagrant ssh -c "touch /var/tmp/bedrock.db && chmod 744 /var/tmp/bedrock.db"
+vagrant ssh -c "/srv/project/lebp-stack/Bedrock/bedrock -db /var/tmp/bedrock.db" 
+cat /etc/rc.local
+/srv/project/lebp-stack/Bedrock/bedrock -db /var/tmp/bedrock.db -fork
 ```
 
 Running as a submodule as a project:
@@ -34,3 +36,16 @@ update Vagrantfile to be idempotent/work from scratch
 get bedrock php libs working
   - work on passing the right config to the constructor
 
+# update hosts file
+127.0.0.1 lebp-stack.dev
+
+# trust cert 
+Trust your certificate in macOS Keychain Access
+you’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
+
+Open Keychain Access
+Highlight the System section on the left
+Find the lebp-stack.dev cert, this is what I dragged and dropped onto Keychain Access > System
+Navigate to your certificate and double click it
+In the dropdown “When using this certificate” choose “Always trust“
+Close the window to save your changes—this will prompt you for your administrator password

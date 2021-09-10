@@ -7,6 +7,8 @@ require_once("/var/www/html/Bedrock-PHP/src/Client.php");
 print("successfully loaded Bedrock lib\n");
 
 use Expensify\Bedrock;
+use Expensify\Bedrock\DB\Response;
+use Expensify\Bedrock\Exceptions\BedrockError;
 $bedrock = Bedrock\Client::getInstance([
             'clusterName' => 'bedrock',
             'mainHostConfigs' => ['localhost' => ['blacklistedUntil' => 0, 'port' => 8888]],
@@ -23,8 +25,9 @@ $bedrock = Bedrock\Client::getInstance([
            ]);
 print("successfully created bedrock instance\n");
 
+$db = new Bedrock\DB($bedrock);
 
-$result = $bedrock->call("query: SELECT 1 AS foo, 2 AS bar;");
+$result = $db->query("SELECT json_array(1, 2) as foobar;");
 print("successfully queried bedrock\n");
 print_r($result);
 

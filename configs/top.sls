@@ -1,3 +1,5 @@
 base:
   '*':
     - global
+    - www
+    - db
