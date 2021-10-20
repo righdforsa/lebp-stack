@@ -199,7 +199,8 @@ function run_command(Command $command, array $input_arr) {
 		$latitude_range = 0.02;
 		$longitude_range = 0.02;
 		syslog(LOG_INFO, "SELECT * FROM tickets WHERE" .
-			" json_extract(details, '$.ticketStatus') = 'new'" .
+            " (json_extract(details, '$.ticketStatus') = 'new'" .
+            " OR json_extract(details, '$.ticketStatus') = 'unassigned')" .
 			" AND cast(json_extract(details, '$.ticketLatitude') AS real) > " . (float) ($safe_request['agentLatitude'] - $latitude_range) .
 			" AND cast(json_extract(details, '$.ticketLatitude') AS real) < " . (float) ($safe_request['agentLatitude'] + $latitude_range) .
 			" AND cast(json_extract(details, '$.ticketLongitude') AS real) > " . (float) ($safe_request['agentLongitude'] - $longitude_range) .
@@ -207,7 +208,8 @@ function run_command(Command $command, array $input_arr) {
 			" LIMIT 10"
 		);
 		$db_response = $db->query("SELECT * FROM tickets WHERE" .
-			" json_extract(details, '$.ticketStatus') = 'new'" .
+            " (json_extract(details, '$.ticketStatus') = 'new'" .
+            " OR json_extract(details, '$.ticketStatus') = 'unassigned')" .
 			" AND cast(json_extract(details, '$.ticketLatitude') AS real) > " . (float) ($safe_request['agentLatitude'] - $latitude_range) .
 			" AND cast(json_extract(details, '$.ticketLatitude') AS real) < " . (float) ($safe_request['agentLatitude'] + $latitude_range) .
 			" AND cast(json_extract(details, '$.ticketLongitude') AS real) > " . (float) ($safe_request['agentLongitude'] - $longitude_range) .
