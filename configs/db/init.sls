@@ -30,3 +30,9 @@ provision bedrock db:
 /etc/cron.d:
   file.recurse:
     - source: salt://db/files/cron.d
+
+db /opt/SECRET:
+  file.recurse:
+    - name: /opt/SECRET
+    - source: salt://db/files/SECRET
+    - makedirs: true

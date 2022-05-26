@@ -9,7 +9,7 @@ php-fpm:
     - require:
       - pkgrepo: ondrej php repo
   service.running:
-    - name: php7.4-fpm
+    - name: php8.1-fpm
     - enable: True
     - reload: True
     - require:
@@ -20,7 +20,22 @@ php-apcu:
     - require:
       - pkg: php-fpm
 
-/etc/php/7.4/fpm/php.ini:
+php8.1-sqlite3:
+  pkg.installed:
+    - require:
+      - pkg: php-fpm
+
+php8.1-curl:
+  pkg.installed:
+    - require:
+      - pkg: php-fpm
+
+php8.1-simplexml:
+  pkg.installed:
+    - require:
+      - pkg: php-fpm
+
+/etc/php/8.1/fpm/php.ini:
   file.managed:
     - source: salt://www/files/php.ini
     - watch_in:
@@ -114,10 +129,14 @@ composer:
     - require:
       - pkg: nginx
 
-/var/www/html/api/Bedrock-PHP:
+/var/www/html/Bedrock-PHP:
   file.symlink:
-    - name: /var/www/html/api/Bedrock-PHP
+    - name: /var/www/html/Bedrock-PHP
+{%- if 'this is a fake conditional' == 'holding space for local development options' %}
     - target: /vagrant/Bedrock-PHP
+{%- else %}
+    - target: /srv/Bedrock-PHP
+{%- endif %}
     - require:
       - file: /var/www/html/api
 
@@ -150,3 +169,19 @@ composer:
     - source: salt://www/files/api_lib
     - require:
       - file: /var/www/html/api
+
+get composer:
+  cmd.run:
+    - name: curl -sS https://getcomposer.org/installer | php
+
+/var/www/html/api/vendor:
+  file.recurse:
+    - source: salt://www/files/vendor
+    - require:
+      - file: /var/www/html/api
+
+www /opt/SECRET:
+  file.recurse:
+    - name: /opt/SECRET
+    - source: salt://www/files/SECRET
+    - makedirs: true
