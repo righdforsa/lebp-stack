@@ -1,6 +1,6 @@
 include:
   - global
-  - db.overlay
+  - db.overlay # include the overlay states from the project repo
 
 libpcrecpp0v5:
   pkg.installed

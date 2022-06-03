@@ -1,3 +1,6 @@
+include:
+  - www.overlay # include the overlay states from the project repo
+
 # general
 www /opt/SECRET:
   file.recurse:
