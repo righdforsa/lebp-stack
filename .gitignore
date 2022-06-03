@@ -1,2 +1,7 @@
 .vagrant
+
+# ignore vagrant vm console log file
 ubuntu-bionic-18.04-cloudimg-console.log
+
+# ignore mac osx directory metadata files
+**/.DS_Store

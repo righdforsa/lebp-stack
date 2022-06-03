@@ -1,3 +1,11 @@
+# general
+www /opt/SECRET:
+  file.recurse:
+    - name: /opt/SECRET
+    - source: salt://www/files/SECRET
+    - makedirs: true
+    - exclude_pat: certs
+
 # PHP
 ondrej php repo:
   pkgrepo.managed:
@@ -62,40 +70,46 @@ nginx:
     - watch_in:
       - service: nginx
 
-/etc/nginx/sites-available/default:
+# site configs
+/etc/nginx/sites-available/lebp-stack-dev-site:
   file.managed:
-    - source: salt://www/files/default
+    - source: salt://www/files/lebp-stack-dev-site
     - watch_in:
       - service: nginx
 
-# TODO: make these configs work
-certbot:
-  snap.installed
+# install certbot for managing letsencrypt certs
+certbot installed:
+  cmd.run:
+    - name: snap install certbot --classic
+    - unless: snap list certbot
 
 #sudo ln -s /snap/bin/certbot /usr/bin/certbot
 /usr/bin/certbot:
   file.symlink:
     - target: /snap/bin/certbot
 
-/etc/nginx/dev.theneighborhoodsquatch.com.pem:
-  file.managed:
-    - source: salt://www/files/dev.theneighborhoodsquatch.com.pem
+# drop certs in the secret dir if you don't want to run letsencrypt certbot
+www certs:
+  file.recurse:
+    - name: /etc/nginx/
+    - source: salt://www/files/SECRET/certs
     - watch_in:
       - service: nginx
     - require:
       - pkg: nginx
 
-/etc/nginx/dev.theneighborhoodsquatch.com.privkey.pem:
+# certs for local development
+/etc/nginx/lebp-stack.dev.crt:
   file.managed:
-    - source: salt://www/files/dev.theneighborhoodsquatch.com.privkey.pem
+    - source: salt://www/files/DEV/lebp-stack.dev.crt
     - watch_in:
       - service: nginx
     - require:
       - pkg: nginx
 
-/etc/nginx/dev.theneighborhoodsquatch.com.chain.pem:
+/etc/nginx/lebp-stack.dev.key:
   file.managed:
-    - source: salt://www/files/dev.theneighborhoodsquatch.com.chain.pem
+    - source: salt://www/files/DEV/lebp-stack.dev.key
     - watch_in:
       - service: nginx
     - require:
@@ -105,6 +119,10 @@ certbot:
 composer:
   pkg.installed
 
+get composer:
+  cmd.run:
+    - name: curl -sS https://getcomposer.org/installer | php
+
 /var/www/html:
   file.directory
 
@@ -112,22 +130,6 @@ composer:
   file.directory:
     - require:
       - file: /var/www/html
-
-/etc/nginx/lebp-stack.dev.crt:
-  file.managed:
-    - source: salt://www/files/lebp-stack.dev.crt
-    - watch_in:
-      - service: nginx
-    - require:
-      - pkg: nginx
-
-/etc/nginx/lebp-stack.dev.key:
-  file.managed:
-    - source: salt://www/files/lebp-stack.dev.key
-    - watch_in:
-      - service: nginx
-    - require:
-      - pkg: nginx
 
 /var/www/html/Bedrock-PHP:
   file.symlink:
@@ -170,18 +172,9 @@ composer:
     - require:
       - file: /var/www/html/api
 
-get composer:
-  cmd.run:
-    - name: curl -sS https://getcomposer.org/installer | php
-
 /var/www/html/api/vendor:
   file.recurse:
     - source: salt://www/files/vendor
     - require:
       - file: /var/www/html/api
 
-www /opt/SECRET:
-  file.recurse:
-    - name: /opt/SECRET
-    - source: salt://www/files/SECRET
-    - makedirs: true
