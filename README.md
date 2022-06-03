@@ -1,6 +1,11 @@
 # lebp-stack
 Generic instance for web platform projects using Linux, Nginx, Bedrock, and PHP. Vagrant is used to provision a local dev VM and bootstrap it. Afterwards, Salt is launched for configuration. (In theory this makes the process more portable to a remote server or several.)
 
+# how to customize:
+create a configs repo separate from lebp-stack
+check it out to /srv/project, where it will be automatically included as another source tree by the salt minion config
+run highstate
+
 # initial getting started commands
 ```
 # git commands
@@ -49,3 +54,4 @@ Find the lebp-stack.dev cert, this is what I dragged and dropped onto Keychain A
 Navigate to your certificate and double click it
 In the dropdown “When using this certificate” choose “Always trust“
 Close the window to save your changes—this will prompt you for your administrator password
+
