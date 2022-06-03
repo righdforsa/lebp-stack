@@ -71,9 +71,9 @@ nginx:
       - service: nginx
 
 # site configs
-/etc/nginx/sites-available/lebp-stack-dev-site:
+/etc/nginx/sites-available/lebp-stack.dev:
   file.managed:
-    - source: salt://www/files/lebp-stack-dev-site
+    - source: salt://www/files/lebp-stack.dev
     - watch_in:
       - service: nginx
 
