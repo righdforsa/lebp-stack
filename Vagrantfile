@@ -7,8 +7,9 @@
 # you're doing.
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "ubuntu/focal64"
 
+  config.vm.hostname = "lebp-stack.dev"
   config.vm.network "private_network", ip: "10.2.2.3"
   config.vm.network "forwarded_port", guest: 443, host: 8443
 
@@ -22,5 +23,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "../", "/srv/project/"
 
   config.vm.provision "shell", path: "scripts/env_prep.sh"
-  config.vm.provision "shell", path: "scripts/bedrock_dev_prep.sh"
+  #config.vm.provision "shell", path: "scripts/bedrock_dev_prep.sh"
+  config.vm.provision "shell", path: "scripts/run-salt.sh"
+
 end

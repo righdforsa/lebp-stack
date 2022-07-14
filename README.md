@@ -6,7 +6,7 @@ create a configs repo separate from lebp-stack
 check it out to /srv/project, where it will be automatically included as another source tree by the salt minion config
 run highstate
 
-# initial getting started commands
+# initial repo getting started commands
 ```
 # git commands
 git init lebp-stack
@@ -26,10 +26,10 @@ cat /etc/rc.local
 /srv/project/lebp-stack/Bedrock/bedrock -db /var/tmp/bedrock.db -fork
 ```
 
-Running as a submodule as a project:
+Running as a submodule in a larger project:
 Setting up:
  - cd lebp-stack/Bedrock && make CC=gcc-9 all
- - cd lebp-stack/Bedrock-PHP && composer install
+ - cd lebp-stack/Bedrock-PHP && php7.4 /usr/bin/composer install
  - cd lebp-stack/scripts && sudo ./place-bedrock.sh
 
 # todo list:
@@ -41,17 +41,20 @@ update Vagrantfile to be idempotent/work from scratch
 get bedrock php libs working
   - work on passing the right config to the constructor
 
-# update hosts file
-127.0.0.1 lebp-stack.dev
+# update hosts file with the host-reachable IP from inside the vagrant vm
+10.2.2.3 lebp-stack.dev
 
 # trust cert 
 Trust your certificate in macOS Keychain Access
-you’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
+You’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
+
+*TODO:* since this is a public repo and publicly available cert, telling your system to trust it is actually a pretty big security hole. We need to find a more reliable way to manage this that is workable for the community. (e.g. create a new cert during provisioning and save it in SECRET)
 
 Open Keychain Access
 Highlight the System section on the left
-Find the lebp-stack.dev cert, this is what I dragged and dropped onto Keychain Access > System
-Navigate to your certificate and double click it
+Open finder and navigate to the lebp-stack.dev cert in the lebp-stack repo
+drag and drop onto Keychain Access > System
+in Keychain Access, Navigate to your certificate and double click it
 In the dropdown “When using this certificate” choose “Always trust“
 Close the window to save your changes—this will prompt you for your administrator password
 
