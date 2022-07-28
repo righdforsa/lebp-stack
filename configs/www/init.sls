@@ -31,17 +31,17 @@ php-apcu:
     - require:
       - pkg: php-fpm
 
+php-xml:
+  pkg.installed:
+    - require:
+      - pkg: php-fpm
+
 php8.1-sqlite3:
   pkg.installed:
     - require:
       - pkg: php-fpm
 
 php8.1-curl:
-  pkg.installed:
-    - require:
-      - pkg: php-fpm
-
-php8.1-simplexml:
   pkg.installed:
     - require:
       - pkg: php-fpm
@@ -80,11 +80,23 @@ nginx:
     - watch_in:
       - service: nginx
 
+/etc/nginx/sites-enabled/lebp-stack.dev:
+  file.symlink:
+    - target: /etc/nginx/sites-available/lebp-stack.dev
+    - require:
+      - file: /etc/nginx/sites-available/lebp-stack.dev
+    - watch_in:
+      - service: nginx
+
 # install certbot for managing letsencrypt certs
 certbot installed:
   cmd.run:
     - name: snap install certbot --classic
     - unless: snap list certbot
+
+# we recommend creating a config file at /etc/letsencrypt/cli.ini to enable salt to manage let's encrypt certs non-interactively
+/etc/letsencrypt:
+  file.directory
 
 #sudo ln -s /snap/bin/certbot /usr/bin/certbot
 /usr/bin/certbot:
@@ -137,7 +149,7 @@ get composer:
 /var/www/html/Bedrock-PHP:
   file.symlink:
     - name: /var/www/html/Bedrock-PHP
-{%- if 'this is a fake conditional' == 'holding space for local development options' %}
+{%- if grains['id'].startswith('lebp-stack.dev') %}
     - target: /vagrant/Bedrock-PHP
 {%- else %}
     - target: /srv/Bedrock-PHP

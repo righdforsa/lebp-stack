@@ -1,5 +1,6 @@
 include:
   - global
+  - shared.sqlite3
   - db.overlay # include the overlay states from the project repo
 
 libpcrecpp0v5:
@@ -8,17 +9,37 @@ libpcrecpp0v5:
 /var/bedrock:
   file.directory
 
+# manage permissions on the db file
 /var/bedrock/bedrock.db:
-  file.managed
+  file.managed:
+    - create: false
+    - replace: false
+    - mode: 0600
+    - require:
+      - file: /var/bedrock
+
+# TODO: replace with a "pkg" require once build server config does its job
+test bedrock exists:
+  cmd.run:
+    - name: test -f /usr/sbin/bedrock
 
 run bedrock:
   cmd.run:
-    - name: sudo /usr/sbin/bedrock -db /var/bedrock/bedrock.db -live -fork
+    - name: /usr/sbin/bedrock -db /var/bedrock/bedrock.db -live -fork
+    #- name: touch /var/bedrock/bedrock.db
     - unless: pgrep -x bedrock
+    - require:
+      - cmd: test bedrock exists
+      - file: /var/bedrock/bedrock.db
+      - pkg: libpcrecpp0v5
+      - cmd: provision bedrock db
 
 provision bedrock db:
   cmd.run:
     - name: sqlite3 /var/bedrock/bedrock.db "CREATE TABLE IF NOT EXISTS example (exampleID INTEGER PRIMARY KEY, created TEXT NOT NULL, details TEXT);"
+    - require:
+      - pkg: sqlite3
+      - file: /var/bedrock/bedrock.db
 
 /opt/lebp-stack/bin/read_db.sh:
   file.managed:

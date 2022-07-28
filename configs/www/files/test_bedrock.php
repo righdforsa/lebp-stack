@@ -27,7 +27,7 @@ print("successfully created bedrock instance\n");
 
 $db = new Bedrock\DB($bedrock);
 
-$result = $db->query("SELECT json_array(1, 2) as foobar;");
+$result = $db->query("SELECT json_array(1, 2) as foobar;", true);
 print("successfully queried bedrock\n");
 print_r($result);
 
