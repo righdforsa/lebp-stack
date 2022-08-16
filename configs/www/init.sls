@@ -187,6 +187,20 @@ get composer:
     - require:
       - file: /var/www/html/api
 
+/opt/DEV/passphrase.php:
+  file.managed:
+    - source: salt://www/files/DEV/passphrase.php
+    - makedirs: true
+    - require:
+      - file: /var/www/html/api/api.php
+
+/opt/DEV/private_key.pem:
+  file.managed:
+    - source: salt://www/files/DEV/private_key.pem
+    - makedirs: true
+    - require:
+      - file: /opt/DEV/passphrase.php
+
 /var/www/html/api/vendor:
   file.recurse:
     - source: salt://www/files/vendor
