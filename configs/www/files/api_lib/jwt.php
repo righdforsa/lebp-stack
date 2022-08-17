@@ -5,11 +5,10 @@ use Firebase\JWT\Key;
 
 function newJWT($username) {
         // Your passphrase
-        $passphrase = '[YOUR_PASSPHRASE]';
+        require 'passphrase.php';
 
         // Your private key file with passphrase
-        // Can be generated with "ssh-keygen -t rsa -m pem"
-        $privateKeyFile = 'PATH/TO/PEM/FILE/private_key.pem';
+        $privateKeyFile = '/private_key.pem';
 
         // Create a private key of type "resource"
         $privateKey = openssl_pkey_get_private(
@@ -33,11 +32,11 @@ function newJWT($username) {
 
 function validateJWT($username,$jwt) {
         // Your passphrase
-        $passphrase = '[YOUR_PASSPHRASE]';
+        require 'passphrase.php';
 
         // Your private key file with passphrase
         // Can be generated with "ssh-keygen -t rsa -m pem"
-        $privateKeyFile = 'PATH/TO/PEM/FILE/private_key.pem';
+        $privateKeyFile = '/private_key.pem';
 
         // Create a private key of type "resource"
         $privateKey = openssl_pkey_get_private(
@@ -50,11 +49,11 @@ function validateJWT($username,$jwt) {
         try{
             $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
             $decoded = (array) $decoded;
-            if(isset($decoded['username'][0]) && $decoded['username'][0] == $username){
-                    return true;
+            if(isset($decoded['username']) && $decoded['username'] == $username){
+                    return $decoded;
             }
             return false;
         }catch(\Exception $e){
-            retrun false;
+            return false;
         }
 }
