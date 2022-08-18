@@ -1,4 +1,8 @@
 {
+    "config": {
+        "vendor-dir": "vendor-lebp-stack"
+    },
+
     "require": {
         "firebase/php-jwt": "^6.3"
     }

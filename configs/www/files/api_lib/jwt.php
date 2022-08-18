@@ -4,11 +4,13 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 function newJWT($username) {
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/vendor-lebp-stack/autoload.php');
+
         // Your passphrase
-        require 'passphrase.php';
+        require '/opt/DEV/passphrase.php';
 
         // Your private key file with passphrase
-        $privateKeyFile = '/private_key.pem';
+        $privateKeyFile = '/opt/DEV/private_key.pem';
 
         // Create a private key of type "resource"
         $privateKey = openssl_pkey_get_private(
@@ -22,8 +24,6 @@ function newJWT($username) {
 
         $jwt = JWT::encode($payload, $privateKey, 'RS256');
 
-
-
         // TODO: Actually make this do something
         // syslog(LOG_INFO, "newJWT(): issuing new JWT for $username");
         //$jwt = hash('sha256', time() . $username . "asdfasdf");
@@ -31,12 +31,14 @@ function newJWT($username) {
 }
 
 function validateJWT($username,$jwt) {
+        require_once($_SERVER['DOCUMENT_ROOT'] . '/vendor-lebp-stack/autoload.php');
+
         // Your passphrase
-        require 'passphrase.php';
+        require '/opt/DEV/passphrase.php';
 
         // Your private key file with passphrase
         // Can be generated with "ssh-keygen -t rsa -m pem"
-        $privateKeyFile = '/private_key.pem';
+        $privateKeyFile = '/opt/DEV/private_key.pem';
 
         // Create a private key of type "resource"
         $privateKey = openssl_pkey_get_private(
