@@ -201,9 +201,10 @@ get composer:
     - require:
       - file: /opt/DEV/passphrase.php
 
-/var/www/html/api/vendor:
+# create a named vendor directory that won't clobber composer use in a project-specific repo
+/var/www/html/api/vendor-lebp-stack:
   file.recurse:
-    - source: salt://www/files/vendor
+    - source: salt://www/files/vendor-lebp-stack
     - require:
       - file: /var/www/html/api
 
