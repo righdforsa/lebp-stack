@@ -23,7 +23,11 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "../", "/srv/project/"
 
   config.vm.provision "shell", path: "scripts/env_prep.sh"
-  #config.vm.provision "shell", path: "scripts/bedrock_dev_prep.sh"
+
+  # running salt the first time takes about 5 mins
   config.vm.provision "shell", path: "scripts/run-salt.sh"
+
+  # building bedrock the first time is tremendously time-consuming, making it a manual step
+  #config.vm.provision "shell", path: "scripts/build-bedrock.sh"
 
 end
