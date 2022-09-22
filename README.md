@@ -5,7 +5,16 @@ Generic instance for web platform projects using Linux, Nginx, Bedrock, and PHP.
 ```
 vagrant up
 vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
-vagrant ssh -c "/vagrant/Bedrock-PHP/ && php /usr/bin/composer install"
+```
+
+## Bedrock-PHP composer config is currently broken (as of 2022-09-22).
+Follow the following process:
+- update Bedrock-PHP/composer.json to replace "Bedrock-PHP" with "bedrock-php"
+- update Bedrock-PHP/composer.json to replace versions for "php-cs-fixer" and "phan" to be `*` version
+- run the following commands
+```
+vagrant ssh -c "cd /vagrant/Bedrock-PHP && curl -sS https://getcomposer.org/installer | php"
+vagrant ssh -c "cd /vagrant/Bedrock-PHP/ && php /usr/bin/composer.php update"
 ```
 
 # how to customize:
