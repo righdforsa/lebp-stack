@@ -8,7 +8,7 @@ vagrant up
 vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
 ```
 
-## Get php vendor libs
+## Get php vendor libs (installed in configs/www/files/vendor-lebp-stack)
 ```
 vagrant ssh -c "cd /vagrant/configs/www/files && curl -sS https://getcomposer.org/installer | php"
 vagrant ssh -c "cd /vagrant/configs/www/files && php composer.phar install"
