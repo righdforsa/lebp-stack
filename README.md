@@ -1,20 +1,36 @@
 # lebp-stack
 Generic instance for web platform projects using Linux, Nginx, Bedrock, and PHP. Vagrant is used to provision a local dev VM and bootstrap it. Afterwards, Salt is launched for configuration. (In theory this makes the process more portable to a remote server or several.)
 
-# Setup to run the first time
+# Setup to run the first time (yes, run salt twice :facepalm:)
+## Build bedrock (takes ~20m the first time)
 ```
 vagrant up
 vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
 ```
 
-## Bedrock-PHP composer config is currently broken (as of 2022-09-22).
-Follow the following process:
-- update Bedrock-PHP/composer.json to replace "Bedrock-PHP" with "bedrock-php"
-- update Bedrock-PHP/composer.json to replace versions for "php-cs-fixer" and "phan" to be `*` version
-- run the following commands
+## Get php vendor libs
+```
+vagrant ssh -c "cd /vagrant/configs/www/files && curl -sS https://getcomposer.org/installer | php"
+vagrant ssh -c "cd /vagrant/configs/www/files && php composer.phar install"
+```
+
+## Get Bedrock-PHP vendor libs
+(FYI Bedrock-PHP composer config is currently broken in mainline, but our submodule is pinned to specific commit with fix)
 ```
 vagrant ssh -c "cd /vagrant/Bedrock-PHP && curl -sS https://getcomposer.org/installer | php"
-vagrant ssh -c "cd /vagrant/Bedrock-PHP/ && php /usr/bin/composer.php update"
+vagrant ssh -c "cd /vagrant/Bedrock-PHP/ && php composer.phar update"
+```
+
+## place and launch all updated configs
+```
+vagrant ssh -c "/vagrant/scripts/run-salt.sh"
+vagrant ssh -c "/vagrant/scripts/run-salt.sh"
+vagrant ssh -c "sudo service nginx restart"
+```
+
+## local test
+```
+vagrant ssh -c "curl -vk https://localhost/test_bedrock.php"
 ```
 
 # how to customize:
@@ -22,7 +38,9 @@ create a configs repo separate from lebp-stack
 check it out to /srv/project, where it will be automatically included as another source tree by the salt minion config
 run `vagrant ssh -c "sudo salt-call --local state.highstate"`
 
-# Build bedrock
+# Chris' legacy notes:
+
+## Build bedrock
 ```
 vagrant up
 vagrant ssh -c "cd /srv/project/lebp-stack/Bedrock && make clean && make CC=gcc-9 all"
@@ -32,13 +50,13 @@ cat /etc/rc.local
 /srv/project/lebp-stack/Bedrock/bedrock -db /var/tmp/bedrock.db -fork
 ```
 
-Running as a submodule in a larger project:
+## Running as a submodule in a larger project:
 Setting up:
  - cd lebp-stack/Bedrock && make CC=gcc-9 all
  - cd lebp-stack/Bedrock-PHP && php7.4 /usr/bin/composer install
  - cd lebp-stack/scripts && sudo ./place-bedrock.sh
 
-# initial repo creation commands
+## initial repo creation commands
 ```
 # git commands
 git init lebp-stack
@@ -50,7 +68,7 @@ git submodule update --init
 cd ../
 ```
 
-# todo list:
+## todo list:
 ~get bedrock to compile and run~
 
 ~add php folder~
@@ -59,10 +77,10 @@ update Vagrantfile to be idempotent/work from scratch
 get bedrock php libs working
   - work on passing the right config to the constructor
 
-# update hosts file with the host-reachable IP from inside the vagrant vm
+## update hosts file with the host-reachable IP from inside the vagrant vm
 10.2.2.3 lebp-stack.dev
 
-# trust cert 
+## trust cert 
 Trust your certificate in macOS Keychain Access
 You’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
 
