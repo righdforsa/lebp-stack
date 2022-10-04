@@ -8,7 +8,17 @@ vagrant up
 vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
 ```
 
-## Get php vendor libs
+### To save setup time by avoiding building bedrock, download the bedrock binary from the latest lebp-stack release:
+use the URL from the first command as the input to the second command
+```
+curl -vl 'https://github.com/righdforsa/lebp-stack/releases/download/v0.1/bedrock' 2>&1 | grep 'location: ' | awk '{ print $3 }'
+curl -o bedrock "<url>"
+sudo cp bedrock /usr/sbin/bedrock
+sudo chmod 755 /usr/sbin/bedrock
+```
+* last confirmed working under libc package version 2.31-0ubuntu9.9 and libpcre runtime files from 2:8.44-2+ubuntu20.04.1+deb.sury.org+1 
+
+## Get php vendor libs (installed in configs/www/files/vendor-lebp-stack)
 ```
 vagrant ssh -c "cd /vagrant/configs/www/files && curl -sS https://getcomposer.org/installer | php"
 vagrant ssh -c "cd /vagrant/configs/www/files && php composer.phar install"
@@ -35,11 +45,10 @@ vagrant ssh -c "curl -vk https://localhost/test_bedrock.php"
 
 # how to customize:
 create a configs repo separate from lebp-stack
-check it out to /srv/project, where it will be automatically included as another source tree by the salt minion config
+check it out to /srv/project in the vm, where it will be automatically included as another source tree by the salt minion config
 run `vagrant ssh -c "sudo salt-call --local state.highstate"`
 
-# Chris' legacy notes:
-
+# Chris' legacy notes, just for him:
 ## Build bedrock
 ```
 vagrant up
