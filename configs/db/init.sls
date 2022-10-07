@@ -39,6 +39,12 @@ run bedrock:
       - file: /var/bedrock/bedrock.db
       - pkg: libpcrecpp0v5
 
+# tortured one-liner exits 0 when 'nc' succeeds and 1 after 10 "sleepy" repetitions without a 'break'
+wait for bedrock:
+  cmd.run:
+    - name: for i in `seq 0 9`; do nc -z -w3 localhost 8888 && break || sleep 3 && ! continue; done
+    - unless: nc -z -w3 localhost 8888
+    
 # will fail the first time because the server isn't up yet, there's probably a way to make a conditional sleep command and then require that
 provision bedrock db:
   cmd.run:
@@ -47,6 +53,7 @@ provision bedrock db:
       - pkg: sqlite3
       - file: /var/bedrock/bedrock.db
       - cmd: run bedrock
+      - cmd: wait for bedrock
 
 /opt/lebp-stack/bin/read_db.sh:
   file.managed:

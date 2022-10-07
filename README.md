@@ -1,7 +1,7 @@
 # lebp-stack
 Generic instance for web platform projects using Linux, Nginx, Bedrock, and PHP. Vagrant is used to provision a local dev VM and bootstrap it. Afterwards, Salt is launched for configuration. (In theory this makes the process more portable to a remote server or several.)
 
-# Setup to run the first time (yes, run salt twice :facepalm:)
+# Setup to run the first time
 ## Build bedrock (takes ~20m the first time)
 ```
 vagrant up
@@ -33,7 +33,6 @@ vagrant ssh -c "cd /vagrant/Bedrock-PHP/ && php composer.phar update"
 
 ## place and launch all updated configs
 ```
-vagrant ssh -c "/vagrant/scripts/run-salt.sh"
 vagrant ssh -c "/vagrant/scripts/run-salt.sh"
 vagrant ssh -c "sudo service nginx restart"
 ```
