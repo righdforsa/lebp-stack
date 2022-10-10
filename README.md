@@ -2,13 +2,8 @@
 Generic instance for web platform projects using Linux, Nginx, Bedrock, and PHP. Vagrant is used to provision a local dev VM and bootstrap it. Afterwards, Salt is launched for configuration. (In theory this makes the process more portable to a remote server or several.)
 
 # Setup to run the first time
-## Build bedrock (takes ~20m the first time)
-```
-vagrant up
-vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
-```
-
-### To save setup time by avoiding building bedrock, download the bedrock binary from the latest lebp-stack release:
+## Get bedrock
+#### To save setup time by avoiding building bedrock, download the bedrock binary from the latest lebp-stack release:
 use the URL from the first command as the input to the second command
 ```
 curl -vl 'https://github.com/righdforsa/lebp-stack/releases/download/v0.1/bedrock' 2>&1 | grep 'location: ' | awk '{ print $3 }'
@@ -17,6 +12,12 @@ sudo cp bedrock /usr/sbin/bedrock
 sudo chmod 755 /usr/sbin/bedrock
 ```
 * last confirmed working under libc package version 2.31-0ubuntu9.9 and libpcre runtime files from 2:8.44-2+ubuntu20.04.1+deb.sury.org+1 
+
+#### Alternatively, build bedrock (takes ~20m the first time)
+```
+vagrant up
+vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
+```
 
 ## Get php vendor libs (installed in configs/www/files/vendor-lebp-stack)
 ```
@@ -31,21 +32,23 @@ vagrant ssh -c "cd /vagrant/Bedrock-PHP && curl -sS https://getcomposer.org/inst
 vagrant ssh -c "cd /vagrant/Bedrock-PHP/ && php composer.phar update"
 ```
 
-## place and launch all updated configs
+## Put the updated configs in the right places
 ```
 vagrant ssh -c "/vagrant/scripts/run-salt.sh"
 vagrant ssh -c "sudo service nginx restart"
 ```
 
-## local test
+## Run a local test to confirm basic functionality
 ```
 vagrant ssh -c "curl -vk https://localhost/test_bedrock.php"
 ```
 
-# how to customize:
-create a configs repo separate from lebp-stack
-check it out to /srv/project in the vm, where it will be automatically included as another source tree by the salt minion config
-run `vagrant ssh -c "sudo salt-call --local state.highstate"`
+# Usage guide
+## How to manage a lebp-stack install with project-specific configs
+Create a configs repo separate from lebp-stack
+Check it out to /srv/project in the vm, where it will be automatically included as another source tree by the salt minion config
+Create "<role>/overlay.sls" config files, which will be automatically included
+Run `vagrant ssh -c "sudo salt-call --local state.highstate"` to execute your custom states
 
 # Chris' legacy notes, just for him:
 ## Build bedrock
@@ -58,12 +61,6 @@ cat /etc/rc.local
 /srv/project/lebp-stack/Bedrock/bedrock -db /var/tmp/bedrock.db -fork
 ```
 
-## Running as a submodule in a larger project:
-Setting up:
- - cd lebp-stack/Bedrock && make CC=gcc-9 all
- - cd lebp-stack/Bedrock-PHP && php7.4 /usr/bin/composer install
- - cd lebp-stack/scripts && sudo ./place-bedrock.sh
-
 ## initial repo creation commands
 ```
 # git commands
@@ -75,6 +72,12 @@ cd Bedrock
 git submodule update --init
 cd ../
 ```
+
+## Running as a submodule in a larger project:
+initial set up:
+ - cd lebp-stack/Bedrock && make CC=gcc-9 all
+ - cd lebp-stack/Bedrock-PHP && php7.4 /usr/bin/composer install
+ - cd lebp-stack/scripts && sudo ./place-bedrock.sh
 
 ## todo list:
 ~get bedrock to compile and run~
