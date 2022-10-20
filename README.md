@@ -21,15 +21,7 @@ vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
 
 ## Get php vendor libs (installed in configs/www/files/vendor-lebp-stack)
 ```
-vagrant ssh -c "cd /vagrant/configs/www/files && curl -sS https://getcomposer.org/installer | php"
-vagrant ssh -c "cd /vagrant/configs/www/files && php composer.phar install"
-```
-
-## Get Bedrock-PHP vendor libs
-(FYI Bedrock-PHP composer config is currently broken in mainline, but our submodule is pinned to specific commit with fix)
-```
-vagrant ssh -c "cd /vagrant/Bedrock-PHP && curl -sS https://getcomposer.org/installer | php"
-vagrant ssh -c "cd /vagrant/Bedrock-PHP/ && php composer.phar update"
+vagrant ssh -c "cd /vagrant/scripts/run-composer-install.sh)
 ```
 
 ## Put the updated configs in the right places
@@ -38,7 +30,7 @@ vagrant ssh -c "/vagrant/scripts/run-salt.sh"
 vagrant ssh -c "sudo service nginx restart"
 ```
 
-## Run a local test to confirm basic functionality
+## Run a local test to confirm basic functionality of the webserver, php environment and db
 ```
 vagrant ssh -c "curl -vk https://localhost/test_bedrock.php"
 ```
@@ -50,7 +42,7 @@ Check it out to /srv/project in the vm, where it will be automatically included 
 Create "<role>/overlay.sls" config files, which will be automatically included
 Run `vagrant ssh -c "sudo salt-call --local state.highstate"` to execute your custom states
 
-# Chris' legacy notes, just for him:
+# Chris' legacy notes, just for him, please ignore:
 ## Build bedrock
 ```
 vagrant up
