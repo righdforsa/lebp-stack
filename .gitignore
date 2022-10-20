@@ -7,4 +7,6 @@ ubuntu-bionic-18.04-cloudimg-console.log
 **/.DS_Store
 
 # ignore composer libraries
+configs/www/files/composer-setup.php
+configs/www/files/composer.phar
 configs/www/files/vendor-lebp-stack/
