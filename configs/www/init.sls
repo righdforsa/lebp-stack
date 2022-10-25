@@ -108,6 +108,7 @@ www certs:
   file.recurse:
     - name: /etc/nginx/
     - source: salt://www/files/SECRET/certs
+    - exclude_pat: '.gitignore'
     - watch_in:
       - service: nginx
     - require:
