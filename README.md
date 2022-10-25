@@ -21,7 +21,7 @@ vagrant ssh -c "/vagrant/scripts/build-bedrock.sh"
 
 ## Get php vendor libs (installed in configs/www/files/vendor-lebp-stack)
 ```
-vagrant ssh -c "cd /vagrant/scripts/run-composer-install.sh)
+vagrant ssh -c "cd /vagrant/scripts/install-composer.sh)
 ```
 
 ## Put the updated configs in the right places
