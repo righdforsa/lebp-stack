@@ -30,7 +30,6 @@ vagrant ssh -c "/vagrant/scripts/install-composer.sh"
 ## 3. Put the updated configs in the right places
 ```
 vagrant ssh -c "/vagrant/scripts/run-salt.sh"
-vagrant ssh -c "sudo service nginx restart"
 ```
 
 ## 4. Run a local test to confirm basic functionality of the webserver, php environment and db
