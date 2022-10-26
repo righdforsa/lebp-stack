@@ -73,6 +73,7 @@ nginx:
     - watch_in:
       - service: nginx
 
+{%- if grains['id'].startswith('lebp-stack.dev') %}
 # site configs
 /etc/nginx/sites-available/lebp-stack.dev:
   file.managed:
@@ -87,6 +88,7 @@ nginx:
       - file: /etc/nginx/sites-available/lebp-stack.dev
     - watch_in:
       - service: nginx
+{%- endif %}
 
 # install certbot for managing letsencrypt certs
 certbot installed:
@@ -153,7 +155,7 @@ get composer:
 {%- if grains['id'].startswith('lebp-stack.dev') %}
     - target: /vagrant/Bedrock-PHP
 {%- else %}
-    - target: /srv/Bedrock-PHP
+    - target: /var/www/html/Bedrock-PHP.current
 {%- endif %}
     - require:
       - file: /var/www/html/api
