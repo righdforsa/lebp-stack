@@ -6,13 +6,11 @@ Generic instance for web platform projects using Linux, Nginx, Bedrock, and PHP.
 All commands have been developed in Mac OSX. Linux should work similarly, but Windows is un-tested. YMMV.
 
 ## 1. Get bedrock
-#### To save setup time by avoiding building bedrock, download the bedrock binary from the latest lebp-stack release:
-use the URL from the first command as the input to the second command
+#### To save setup time by avoiding building bedrock, download the bedrock binary from the latest lebp-stack release. Run these commands from the lebp-stack repo root, using the URL from the first command as the input to the second command.
 ```
 curl -vl 'https://github.com/righdforsa/lebp-stack/releases/download/v0.1/bedrock' 2>&1 | grep 'location: ' | awk '{ print $3 }'
-curl -o bedrock "<url>"
-sudo cp bedrock /usr/sbin/bedrock
-sudo chmod 755 /usr/sbin/bedrock
+curl -o bedrock.bin "<url>"
+vagrant ssh -c "sudo mv /vagrant/bedrock.bin /usr/sbin/bedrock && sudo chmod 755 /usr/sbin/bedrock"
 ```
 * Note: "bedrock" binary downloaded above was last confirmed working under libc package version 2.31-0ubuntu9.9 and libpcre runtime files from 2:8.44-2+ubuntu20.04.1+deb.sury.org+1 
 
