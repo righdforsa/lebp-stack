@@ -50,7 +50,17 @@ Setup Complete!
 
 ## How to connect to the api from the host workstation
 ### update hosts file with the host-reachable IP from inside the vagrant vm
+add the following line to /etc/hosts
+```
 10.2.2.3 lebp-stack.dev
+```
+
+validate the host entry with curl
+```
+curl -kv https://lebp-stack.dev:443/api.php
+```
+
+if the above step fails, check the IP of the VM to confirm the networking is set up in the expected way
 
 ### trust the certificate (OSX)
 Trust your certificate in macOS Keychain Access
