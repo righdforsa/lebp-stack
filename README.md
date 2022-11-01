@@ -8,8 +8,16 @@ All commands have been developed in Mac OSX. Linux should work similarly, but Wi
 ## 1. Get bedrock
 #### To save setup time by avoiding building bedrock, download the bedrock binary from the latest lebp-stack release. Run these commands from the lebp-stack repo root, using the URL from the first command as the input to the second command.
 ```
+# get github crafted url
 curl -vl 'https://github.com/righdforsa/lebp-stack/releases/download/v0.1/bedrock' 2>&1 | grep 'location: ' | awk '{ print $3 }'
+
+# get bedrock using github crafted url
 curl -o bedrock.bin "<url>"
+
+# validate (approximately) a successful download
+test -s bedrock.bin && echo "Download Success" || echo "Download Failed"
+
+# move the binary to the correct location and set permissions
 vagrant ssh -c "sudo mv /vagrant/bedrock.bin /usr/sbin/bedrock && sudo chmod 755 /usr/sbin/bedrock"
 ```
 * Note: "bedrock" binary downloaded above was last confirmed working under libc package version 2.31-0ubuntu9.9 and libpcre runtime files from 2:8.44-2+ubuntu20.04.1+deb.sury.org+1 
