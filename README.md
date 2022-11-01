@@ -64,7 +64,7 @@ if the above step fails, check the IP of the VM to confirm the networking is set
 
 ### trust the certificate (OSX)
 Trust your certificate in macOS Keychain Access
-You’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
+In order to connect to the api through the browser, (e.g. while running javascript in a web app project) you’ll need to tell your computer to trust the api webserver certificate since it’s not trusted by default.
 
 *TODO:* since this is a public repo and publicly available cert, telling your system to trust it is actually a pretty big security hole. We need to find a more reliable way to manage this that is workable for the community. (e.g. create a new cert during provisioning and save it in SECRET)
 
@@ -77,10 +77,10 @@ You’ll need to tell your computer to trust the certificate authority since it�
 - Close the window to save your changes—this will prompt you for your administrator password
 
 ## How to manage a lebp-stack install with project-specific configs
-Create a configs repo separate from lebp-stack.
-Check it out to /srv/project in the vm, where it will be automatically included as another source tree by the salt minion config
-Create "<role>/overlay.sls" config files, which will be automatically included
-Run `vagrant ssh -c "sudo salt-call --local state.highstate"` to execute your custom states
+- Create a configs repo separate from lebp-stack.
+- Check it out to /srv/project in the vm, where it will be automatically included as another source tree by the salt minion config
+- Create "<role>/overlay.sls" config files, which will be automatically included
+- Run `vagrant ssh -c "sudo salt-call --local state.highstate"` to execute your custom states
 
 ---
 # Chris' legacy notes, just for him, please ignore:
