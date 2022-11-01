@@ -47,6 +47,25 @@ Setup Complete!
 
 ---
 # Usage guide
+
+## How to connect to the api from the host workstation
+### update hosts file with the host-reachable IP from inside the vagrant vm
+10.2.2.3 lebp-stack.dev
+
+### trust the certificate (OSX)
+Trust your certificate in macOS Keychain Access
+You’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
+
+*TODO:* since this is a public repo and publicly available cert, telling your system to trust it is actually a pretty big security hole. We need to find a more reliable way to manage this that is workable for the community. (e.g. create a new cert during provisioning and save it in SECRET)
+
+- Open Keychain Access
+- Highlight the System section on the left
+- Open finder and navigate to the lebp-stack.dev cert in the lebp-stack repo
+- drag and drop onto Keychain Access > System
+- in Keychain Access, Navigate to your certificate and double click it
+- In the dropdown “When using this certificate” choose “Always trust“
+- Close the window to save your changes—this will prompt you for your administrator password
+
 ## How to manage a lebp-stack install with project-specific configs
 Create a configs repo separate from lebp-stack.
 Check it out to /srv/project in the vm, where it will be automatically included as another source tree by the salt minion config
@@ -91,21 +110,4 @@ initial set up:
 update Vagrantfile to be idempotent/work from scratch
 get bedrock php libs working
   - work on passing the right config to the constructor
-
-## update hosts file with the host-reachable IP from inside the vagrant vm
-10.2.2.3 lebp-stack.dev
-
-## trust cert 
-Trust your certificate in macOS Keychain Access
-You’ll need to tell your computer to trust the certificate authority since it’s not trusted by default.
-
-*TODO:* since this is a public repo and publicly available cert, telling your system to trust it is actually a pretty big security hole. We need to find a more reliable way to manage this that is workable for the community. (e.g. create a new cert during provisioning and save it in SECRET)
-
-Open Keychain Access
-Highlight the System section on the left
-Open finder and navigate to the lebp-stack.dev cert in the lebp-stack repo
-drag and drop onto Keychain Access > System
-in Keychain Access, Navigate to your certificate and double click it
-In the dropdown “When using this certificate” choose “Always trust“
-Close the window to save your changes—this will prompt you for your administrator password
 
