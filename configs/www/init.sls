@@ -117,17 +117,17 @@ www certs:
       - pkg: nginx
 
 # certs for local development
-/etc/nginx/lebp-stack.dev.crt:
+/etc/nginx/lebp-stack.dev-ca.crt:
   file.managed:
-    - source: salt://www/files/DEV/lebp-stack.dev.crt
+    - source: salt://www/files/DEV/lebp-stack.dev-ca.crt
     - watch_in:
       - service: nginx
     - require:
       - pkg: nginx
 
-/etc/nginx/lebp-stack.dev.key:
+/etc/nginx/lebp-stack.dev-ca.key:
   file.managed:
-    - source: salt://www/files/DEV/lebp-stack.dev.key
+    - source: salt://www/files/DEV/lebp-stack.dev-ca.key
     - watch_in:
       - service: nginx
     - require:

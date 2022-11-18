@@ -1,0 +1,82 @@
+# I got this from https://stackoverflow.com/questions/57565665/one-self-signed-cert-to-rule-them-all-chrome-android-and-ios - cp, 2022-11-04
+
+[ req ]
+default_bits        = 4096
+default_keyfile     = ca.key
+default_md          = sha256
+default_days        = 825
+encrypt_key         = no
+distinguished_name  = subject
+req_extensions      = req_ext
+x509_extensions     = x509_ext
+string_mask         = utf8only
+prompt              = no
+
+# The Subject DN can be formed using X501 or RFC 4514 (see RFC 4519 for a description).
+#   Its sort of a mashup. For example, RFC 4514 does not provide emailAddress.
+
+[ subject ]
+countryName                 = US
+stateOrProvinceName         = Oregon
+localityName                = Portland
+organizationName            = lebp-stack
+OU                          = SWEng
+
+# Use a friendly name here because it's presented to the user. The server's DNS
+#   names are placed in Subject Alternate Names. Plus, DNS names here is deprecated
+#   by both IETF and CA/Browser Forums. If you place a DNS name here, then you
+#   must include the DNS name in the SAN too (otherwise, Chrome and others that
+#   strictly follow the CA/Browser Baseline Requirements will fail).
+
+commonName              = lebp-stack.dev
+emailAddress            = lebp-stack@lebp-stack.dev
+
+# Section x509_ext is used when generating a self-signed certificate. I.e., openssl req -x509 ...
+
+[ x509_ext ]
+subjectKeyIdentifier      = hash
+authorityKeyIdentifier    = keyid:always,issuer
+
+# You only need digitalSignature below. *If* you don't allow
+#   RSA Key transport (i.e., you use ephemeral cipher suites), then
+#   omit keyEncipherment because that's key transport.
+
+basicConstraints = critical, CA:TRUE
+keyUsage         = critical, digitalSignature, keyEncipherment, cRLSign, keyCertSign
+subjectAltName   = DNS:lebp-stack.dev
+extendedKeyUsage = serverAuth
+
+# RFC 5280, Section 4.2.1.12 makes EKU optional
+#   CA/Browser Baseline Requirements, Appendix (B)(3)(G) makes me confused
+#   In either case, you probably only need serverAuth.
+
+extendedKeyUsage = TLS Web Server Authentication
+
+# Section req_ext is used when generating a certificate signing request. I.e., openssl req ...
+
+[ req_ext ]
+subjectKeyIdentifier = hash
+basicConstraints     = CA:FALSE
+keyUsage             = digitalSignature, keyEncipherment
+subjectAltName       = DNS:lebp-stack.dev
+nsComment            = "OpenSSL Generated Certificate"
+
+# RFC 5280, Section 4.2.1.12 makes EKU optional
+#   CA/Browser Baseline Requirements, Appendix (B)(3)(G) makes me confused
+#   In either case, you probably only need serverAuth.
+# extendedKeyUsage    = serverAuth, clientAuth
+
+# [ alternate_names ]
+# DNS.1       = example.com
+# DNS.2       = www.example.com
+# DNS.3       = mail.example.com
+# DNS.4       = ftp.example.com
+
+# Add these if you need them. But usually you don't want them or
+#   need them in production. You may need them for development.
+# DNS.5       = localhost
+# DNS.6       = localhost.localdomain
+# DNS.7       = 127.0.0.1
+
+# IPv6 localhost
+# DNS.8     = ::1
