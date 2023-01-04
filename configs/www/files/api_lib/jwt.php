@@ -22,6 +22,7 @@ function newJWT($username) {
             'username' => $username
         ];
 
+        syslog(LOG_INFO, "debug: encoding jwt with payload:" . json_encode($payload));
         $jwt = JWT::encode($payload, $privateKey, 'RS256');
 
         // TODO: Actually make this do something
@@ -50,6 +51,7 @@ function validateJWT($username,$jwt) {
 
         try{
             $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
+            syslog(LOG_INFO, "debug: successfully decoded jwt:" . json_encode($decoded));
             $decoded = (array) $decoded;
             if(isset($decoded['username']) && $decoded['username'] == $username){
                     return $decoded;
