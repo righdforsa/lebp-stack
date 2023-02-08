@@ -9,7 +9,7 @@ $request_id = uniqid();
 $input = json_decode(file_get_contents('php://input'), true);
 if(! $input) {
     print "expecting json, unable decode input\n";
-    syslog(LOG_WARNING, "$request_id expecting json, unable decode input");
+    syslog(LOG_WARNING, "$request_id: expecting json, unable decode input");
     http_response_code(400);
     return;
 }
@@ -17,12 +17,12 @@ if(! $input) {
 # ensure command was provided
 if( ! isset($input['command'])){ 
     print "this is an api, please send your command\n";
-    syslog(LOG_WARNING, "$request_id expecting json, unable decode input for " . $input);
+    syslog(LOG_WARNING, "$request_id: expecting json, unable decode input for " . $input);
     http_response_code(400);
     return;
 } else {
     $safe_request['command'] = sanitize_input('simple_string', $input['command']);
-    syslog(LOG_INFO, "$request_id got command: " . $safe_request['command']);
+    syslog(LOG_INFO, "$request_id: got command: " . $safe_request['command']);
 }
 
 # see if we have the command
@@ -33,21 +33,16 @@ try {
     $command->request_id = $request_id;
 } catch (Throwable $t) {
     print("unrecognized command\n");
-    syslog(LOG_WARNING, "$request_id Unknown api command " . $safe_request['command'] . " error: " . $t->getMessage());
+    syslog(LOG_WARNING, "$request_id: Unknown api command " . $safe_request['command'] . " error: " . $t->getMessage());
     http_response_code(404);
     return;
 }
 
-syslog(LOG_INFO, "$request_id calling run_command(): " . $safe_request['command'] . " with input " . json_encode($input));
-run_command($command, $input);
+syslog(LOG_INFO, "$request_id: calling run_command(): " . $safe_request['command'] . " with input " . json_encode($input));
+$command->run($input);
 
-function run_command(Command $command, array $input_arr) {
-    syslog(LOG_INFO, "$request_id run_command(): $command->name with input " . json_encode($input_arr));
-    $command->run($input_arr);
-    syslog(LOG_WARNING, "$request_id run_command(): command $command->name run() function did not exit, continuing");
-
-    # if we made it here, then something is broken
-    syslog(LOG_WARNING, "$request_id Unknown command name: " . $command->name);
-    print("unrecognized command\n");
-    http_response_code(400);
-}
+# if we made it here, then something is broken
+syslog(LOG_WARNING, "$request_id: run_command(): command $command->name run() function did not exit, continuing");
+print("unknown system error\n");
+http_response_code(500);
+die();
