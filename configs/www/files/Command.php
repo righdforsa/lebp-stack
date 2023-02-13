@@ -4,7 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/api_lib/sanitize_input.php");
 abstract class Command {
     public string $request_id;
 
-    private array $input_arr;
+    protected array $input_arr;
 
     public function __construct(string $request_id, array $input_arr) {
         $this->request_id = $request_id;
@@ -34,7 +34,7 @@ abstract class Command {
 	$safe_request = [];
         foreach ($required_params as $paramName => $validator) {
             try {
-                syslog(LOG_INFO, "debug: testing $paramName against validator $validator");
+                syslog(LOG_INFO, "debug: testing '$paramName' against validator '$validator'");
                 $safe_request[$paramName] = sanitize_input($validator, $this->input_arr[$paramName]);
             } catch (Throwable $t) {
                 syslog(LOG_WARNING, "failed to sanitize required input parameter: $paramName, error " . $t);
