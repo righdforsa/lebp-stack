@@ -8,7 +8,7 @@ function sanitize_input(string $datatype, $value, bool $ok_empty = false) {
         } else {
             syslog(LOG_WARNING, "Argument error: command parameter with type '$datatype' contains empty value");
             print("Argument error: empty command parameter failed '$datatype' test\n");
-            http_response_code(401);
+            http_response_code(400);
             exit;
         }
     }
@@ -50,7 +50,7 @@ function sanitize_input(string $datatype, $value, bool $ok_empty = false) {
     if ($safe_value === false) {
         syslog(LOG_WARNING, "Parse error: command parameter with type '$datatype' contains invalid value: '$value'");
         print("Parse error: command parameter failed '$datatype' test\n");
-        http_response_code(401);
+        http_response_code(400);
         exit;
     } else {
         return( $safe_value );
