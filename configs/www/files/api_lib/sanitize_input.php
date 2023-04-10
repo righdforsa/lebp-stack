@@ -4,7 +4,7 @@ function sanitize_input(string $datatype, $value, bool $ok_empty = false) {
     syslog(LOG_INFO, "debug: testing datatype match for '$datatype'");
     if($value === "") {
         if($ok_empty == true) {
-            return true;
+            return $value;
         } else {
             syslog(LOG_WARNING, "Argument error: command parameter with type '$datatype' contains empty value");
             print("Argument error: empty command parameter failed '$datatype' test\n");
