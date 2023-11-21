@@ -143,10 +143,15 @@ get composer:
     - name: curl -sS https://getcomposer.org/installer | php
 
 /var/www/html:
-  file.directory
+  file.directory:
+    - makedirs: true
+    - order: 1
+
 
 /var/www/html/api:
   file.directory:
+    - makedirs: true
+    - order: 2
     - require:
       - file: /var/www/html
 
