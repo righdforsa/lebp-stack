@@ -212,9 +212,17 @@ get composer:
 
 # create a named vendor directory that won't clobber composer use in a project-specific repo
 # let the project overlay use the default "vendor" dir
+/var/www/html/api/vendor-lebp-stack-create:
+  file.directory:
+    - makedirs: true
+    - require:
+      - file: /var/www/html/api
+
 /var/www/html/api/vendor-lebp-stack:
   file.recurse:
     - source: salt://www/files/vendor-lebp-stack
+    - unless: test -d /var/www/html/api/vendor-lebp-stack
     - require:
-      - file: /var/www/html/api
+      - file: /var/www/html/api/vendor-lebp-stack-create
+
 
