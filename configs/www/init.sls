@@ -15,7 +15,7 @@ ondrej php repo:
     - name: deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main
     - ppa: ondrej/php
 
-php-fpm:
+php8.1-fpm:
   pkg.installed:
     - require:
       - pkgrepo: ondrej php repo
@@ -24,33 +24,34 @@ php-fpm:
     - enable: True
     - reload: True
     - require:
-      - pkg: php-fpm
+      - pkg: php8.1-fpm
 
-php-apcu:
+php8.1-apcu:
   pkg.installed:
     - require:
-      - pkg: php-fpm
+      - pkg: php8.1-fpm
 
-php-xml:
+php8.1-xml:
   pkg.installed:
     - require:
-      - pkg: php-fpm
+      - pkg: php8.1-fpm
 
 php8.1-sqlite3:
   pkg.installed:
     - require:
-      - pkg: php-fpm
+      - pkg: php8.1-fpm
 
 php8.1-curl:
   pkg.installed:
     - require:
-      - pkg: php-fpm
+      - pkg: php8.1-fpm
 
 /etc/php/8.1/fpm/php.ini:
   file.managed:
+    - makedirs: true
     - source: salt://www/files/php.ini
     - watch_in:
-      - service: php-fpm
+      - service: php8.1-fpm
 
 /var/www/html/api/hello.php:
   file.managed:
@@ -65,7 +66,7 @@ nginx:
     - reload: True
     - require:
       - pkg: nginx
-      - service: php-fpm
+      - service: php8.1-fpm
 
 /etc/nginx/nginx.conf:
   file.managed:
@@ -142,10 +143,15 @@ get composer:
     - name: curl -sS https://getcomposer.org/installer | php
 
 /var/www/html:
-  file.directory
+  file.directory:
+    - makedirs: true
+    - order: 1
+
 
 /var/www/html/api:
   file.directory:
+    - makedirs: true
+    - order: 2
     - require:
       - file: /var/www/html
 
@@ -206,9 +212,17 @@ get composer:
 
 # create a named vendor directory that won't clobber composer use in a project-specific repo
 # let the project overlay use the default "vendor" dir
+/var/www/html/api/vendor-lebp-stack-create:
+  file.directory:
+    - makedirs: true
+    - require:
+      - file: /var/www/html/api
+
 /var/www/html/api/vendor-lebp-stack:
   file.recurse:
     - source: salt://www/files/vendor-lebp-stack
+    - unless: test -d /var/www/html/api/vendor-lebp-stack
     - require:
-      - file: /var/www/html/api
+      - file: /var/www/html/api/vendor-lebp-stack-create
+
 

@@ -24,10 +24,16 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", path: "scripts/env_prep.sh"
 
+  # building bedrock the first time is tremendously time-consuming, making it a manual step
+  # config.vm.provision "shell", path: "scripts/build-bedrock.sh"
+
+  # copy bedrock binary file if downloaded prebuilt
+  # config.vm.provision "shell", inline: "sudo cp /vagrant/bedrock.bin /usr/sbin/bedrock && sudo chmod 755 /usr/sbin/bedrock"
+
   # running salt the first time takes about 5 mins
   config.vm.provision "shell", path: "scripts/run-salt.sh"
 
-  # building bedrock the first time is tremendously time-consuming, making it a manual step
-  #config.vm.provision "shell", path: "scripts/build-bedrock.sh"
-
+  # run composer
+  config.vm.provision "shell", path: "scripts/install-composer.sh"
+  
 end
